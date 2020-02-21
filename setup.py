@@ -14,11 +14,9 @@
 
 from setuptools import find_packages, setup
 
-from opencensus.ext.tornado.common.version import __version__
-
 setup(
     name="opencensus-ext-tornado",
-    version=__version__,  # noqa
+    version="0.1.dev0",  # noqa
     author="OpenCensus Authors, Marc Peake",
     author_email="mpeake@gmail.com",
     classifiers=[
@@ -46,5 +44,5 @@ setup(
     packages=find_packages(exclude=("examples", "tests",)),
     namespace_packages=[],
     url="https://github.com/peakm0/opencensus-ext-tornado",  # noqa: E501
-    zip_safe=False,
+    zip_safe=False
 )
