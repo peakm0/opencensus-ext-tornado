@@ -16,7 +16,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="opencensus-ext-tornado",
-    version="0.1.dev0",  # noqa
+    version="0.2.dev0",  # noqa
     author="OpenCensus Authors, Marc Peake",
     author_email="mpeake@gmail.com",
     classifiers=[

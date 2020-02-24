@@ -1,6 +1,7 @@
 import functools
 import wrapt
 import sys
+import json
 from inspect import iscoroutine
 
 from opencensus.trace.tracer import Tracer
@@ -66,14 +67,22 @@ class TornadoTracing(object):
         span = self._tracer.span(name=request.path)
         span.span_kind = SpanKind.SERVER
 
+        # get details from user, headers and body
+        items = json.loads(handler.get_secure_cookie("user") or "{}")
+        items.update(dict(request.headers))
+        items.update(json.loads(request.body or "{}"))
+
+        # add standard fields
+        items.update({
+            COMPONENT  : "HTTP",
+            HTTP_HOST  : request.host,
+            HTTP_METHOD: request.method,
+            HTTP_URL   : request.uri,
+            HTTP_PATH  : request.path
+        })
+
         # log any traced attributes
-        for k, v in [
-            (COMPONENT  , "HTTP"),
-            (HTTP_HOST  , request.host),
-            (HTTP_METHOD, request.method),
-            (HTTP_URL   , request.uri),
-            (HTTP_PATH  , request.path)
-        ]:
+        for k, v in items.items():
             self._tracer.add_attribute_to_current_span(k, v)
 
         for attr in attributes:
