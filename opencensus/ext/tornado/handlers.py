@@ -9,7 +9,7 @@ async def execute(func, handler, args, kwargs):
     trace_all       = attrs.get("trace_all")
     blacklist_paths = attrs.get("blacklist_paths")
 
-    if trace_all and not disable_tracing_url(handler.request.uri, blacklist_paths):
+    if trace_all and "/" in handler.request.uri and not disable_tracing_url(handler.request.uri, blacklist_paths):
         attrs = handler.settings.get('opencensus_traced_attributes', [])
         tracing._start_tracing(handler, attrs)
 
@@ -23,7 +23,7 @@ def on_finish(func, handler, args, kwargs):
     trace_all       = attrs.get("trace_all")
     blacklist_paths = attrs.get("blacklist_paths")
 
-    if trace_all and not disable_tracing_url(handler.request.uri, blacklist_paths):
+    if trace_all and "/" in handler.request.uri and not disable_tracing_url(handler.request.uri, blacklist_paths):
         tracing._finish_tracing(handler)
 
     return func(*args, **kwargs)
