@@ -81,10 +81,15 @@ class TornadoTracing(object):
             HTTP_PATH  : request.path
         })
 
-        # log any traced attributes
         for k, v in items.items():
             self._tracer.add_attribute_to_current_span(k, v)
 
+        # add header fields
+        for k, v in headers.items():
+            k = "headers." + "".join(["_" if x == "-" else x.lower() for x in k])
+            self._tracer.add_attribute_to_current_span(k, v)
+
+        # log any traced attributes
         for attr in attributes:
             if hasattr(request, attr):
                 payload = str(getattr(request, attr))
